@@ -28,7 +28,7 @@ import {
 	faTrash,
 	faTrashAlt,
 	faUndo,
-	faCopy
+	faClone
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, {
@@ -433,6 +433,25 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 		},
 		[socket, controlId]
 	)
+
+	const duplicateStep = useCallback( // TODO: implement function
+		(e: FormEvent) => {
+			if (e) e.preventDefault()
+
+			socketEmitPromise(socket, 'controls:step:add', [controlId])
+				.then((newStep) => {
+					if (newStep) {
+						setSelectedStep(`step:${newStep}`)
+						setTimeout(() => setSelectedStep(`step:${newStep}`), 500)
+					}
+				})
+				.catch((e) => {
+					console.error('Failed to append step:', e)
+				})
+		},
+		[socket, controlId]
+	)
+
 	const removeStep = useCallback(
 		(stepId: string) => {
 			confirmRef.current?.show('Remove step', 'Are you sure you wish to remove this step?', 'Remove', () => {
@@ -598,9 +617,9 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 									style={{ backgroundColor: '#f0f0f0', marginRight: 1 }}
 									title="Duplicate step"
 									disabled={keys.length === 1}
-									onClick={appendStep}
+									onClick={duplicateStep}
 								>
-									<FontAwesomeIcon icon={faCopy} />
+									<FontAwesomeIcon icon={faClone} />
 								</CButton>
 								<CButton
 									style={{ backgroundColor: '#f0f0f0' }}
