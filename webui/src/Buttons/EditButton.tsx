@@ -28,6 +28,7 @@ import {
 	faTrash,
 	faTrashAlt,
 	faUndo,
+	faCopy
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, {
@@ -592,6 +593,14 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 									onClick={appendStep}
 								>
 									<FontAwesomeIcon icon={faPlus} />
+								</CButton>
+								<CButton
+									style={{ backgroundColor: '#f0f0f0', marginRight: 1 }}
+									title="Duplicate step"
+									disabled={keys.length === 1}
+									onClick={appendStep}
+								>
+									<FontAwesomeIcon icon={faCopy} />
 								</CButton>
 								<CButton
 									style={{ backgroundColor: '#f0f0f0' }}
