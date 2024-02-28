@@ -41,6 +41,16 @@ export class ControlWithSteps extends ControlBase {
 	}
 
 	/**
+	 * Duplicate a step to this control
+	 * @param {string} _stepId the id of the action-set
+	 * @returns {string} Id of new step
+	 * @access public
+	 */
+	stepDuplicate(_stepId) {
+		throw new Error('Not implemented')
+	}
+
+	/**
 	 * Progress through the action-sets
 	 * @param {number} _amount Number of steps to progress
 	 * @returns {boolean} success

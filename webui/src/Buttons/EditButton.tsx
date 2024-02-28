@@ -435,10 +435,10 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 	)
 
 	const duplicateStep = useCallback( 
-		(e: FormEvent) => {
+		(e: FormEvent, stepId: string) => {
 			if (e) e.preventDefault()
 
-			socketEmitPromise(socket, 'controls:step:duplicate', [controlId])
+			socketEmitPromise(socket, 'controls:step:duplicate', [controlId, stepId])
 				.then((newStep) => {
 					if (newStep) {
 						setSelectedStep(`step:${newStep}`)
@@ -446,7 +446,7 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 					}
 				})
 				.catch((e) => {
-					console.error('Failed to append step:', e)
+					console.error('Failed to duplicate step:', e)
 				})
 		},
 		[socket, controlId]
@@ -617,7 +617,7 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 									style={{ backgroundColor: '#f0f0f0', marginRight: 1 }}
 									title="Duplicate step"
 									disabled={keys.length === 1}
-									onClick={duplicateStep}
+									onClick={(e: FormEvent) => duplicateStep(e, selectedKey)}
 								>
 									<FontAwesomeIcon icon={faClone} />
 								</CButton>

@@ -840,6 +840,40 @@ export default class ControlButtonNormal extends ButtonControlBase {
 	}
 
 	/**
+	 * Add a step to this control
+	 * @param {string} stepId the id of the action-set
+	 * @returns {string} Id of new step
+	 * @access public
+	 */
+	stepDuplicate(stepId) {
+		const existingKeys = GetStepIds(this.steps)
+			.map((k) => Number(k))
+			.filter((k) => !isNaN(k))
+
+		if (existingKeys.length === 0) {
+			// add the default '0' set
+			this.steps['0'] = this.#getNewStepValue()
+
+			this.commitChange(true)
+
+			return '0'
+		} else {
+			// add duplicate one after the last
+			const max = Math.max(...existingKeys)
+
+			const newStepId = `${max + 1}`
+
+			const oldStep = this.steps[stepId]
+
+			this.steps[newStepId] = this.#getNewStepValue(cloneDeep(oldStep.action_sets), cloneDeep(oldStep.options))
+
+			this.commitChange(true)
+
+			return newStepId
+		}
+	}
+
+	/**
 	 * Progress through the action-sets
 	 * @param {number} amount Number of steps to progress
 	 * @returns {boolean} success
