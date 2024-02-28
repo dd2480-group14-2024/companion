@@ -434,11 +434,11 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 		[socket, controlId]
 	)
 
-	const duplicateStep = useCallback( // TODO: implement function
+	const duplicateStep = useCallback( 
 		(e: FormEvent) => {
 			if (e) e.preventDefault()
 
-			socketEmitPromise(socket, 'controls:step:add', [controlId])
+			socketEmitPromise(socket, 'controls:step:duplicate', [controlId])
 				.then((newStep) => {
 					if (newStep) {
 						setSelectedStep(`step:${newStep}`)

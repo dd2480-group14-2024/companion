@@ -664,6 +664,18 @@ class ControlsController extends CoreBase {
 				throw new Error(`Control "${controlId}" does not support steps`)
 			}
 		})
+
+		client.onPromise('controls:step:duplicate', (controlId) => {
+			const control = this.getControl(controlId)
+			if (!control) return false
+
+			if (control.supportsSteps) {
+				return control.stepAdd()
+			} else {
+				throw new Error(`Control "${controlId}" does not support steps`)
+			}
+		})
+
 		client.onPromise('controls:step:remove', (controlId, stepId) => {
 			const control = this.getControl(controlId)
 			if (!control) return false
