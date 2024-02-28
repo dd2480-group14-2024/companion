@@ -433,7 +433,6 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 		},
 		[socket, controlId]
 	)
-
 	const duplicateStep = useCallback( 
 		(e: FormEvent, stepId: string) => {
 			if (e) e.preventDefault()
@@ -451,7 +450,6 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 		},
 		[socket, controlId]
 	)
-
 	const removeStep = useCallback(
 		(stepId: string) => {
 			confirmRef.current?.show('Remove step', 'Are you sure you wish to remove this step?', 'Remove', () => {
