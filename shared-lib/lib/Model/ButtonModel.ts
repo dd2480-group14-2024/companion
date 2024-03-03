@@ -30,6 +30,7 @@ export interface NormalButtonModel {
 export type NormalButtonSteps = Record<
 	string,
 	{
+		name?: string
 		action_sets: ActionSetsModel
 		options: ActionStepOptions
 	}

@@ -61,6 +61,7 @@ import { FeedbackInstance } from '@companion-app/shared/Model/FeedbackModel.js'
 import { NormalButtonSteps, SomeButtonModel } from '@companion-app/shared/Model/ButtonModel.js'
 import { RootAppStoreContext } from '../Stores/RootAppStore.js'
 import { observer } from 'mobx-react-lite'
+import { EditableInput } from '@hello-pangea/color-picker'
 
 interface EditButtonProps {
 	location: ControlLocation
@@ -405,15 +406,24 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 
 	const keys = useMemo(() => GetStepIds(steps), [steps])
 	const [selectedStep, setSelectedStep] = useState(keys.length ? `step:${keys[0]}` : 'feedbacks')
+	const [stepNames, setStepNames] = useState<Record<string, string>>({});
 
 	useEffect(() => {
-		const keys2 = keys.map((k) => `step:${k}`)
-		keys2.push('feedbacks')
-
-		if (!keys2.includes(selectedStep)) {
-			setSelectedStep(keys2[0])
-		}
-	}, [keys, selectedStep])
+		// Initialize step names from the provided steps
+		const initialStepNames = Object.keys(steps).reduce((acc, key) => {
+			acc[key] = steps[key].name || `Step ${key}`;
+			return acc;
+		  }, {} as Record<string, string>);
+		  setStepNames(initialStepNames);
+		}, [steps]);
+	
+		const handleStepNameChange = (stepId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+			// Update the step name for the specified stepId
+			setStepNames((prevStepNames) => ({
+			  ...prevStepNames,
+			  [stepId]: e.target.value,
+			}));
+		  };
 
 	const appendStep = useCallback(
 		(e: FormEvent) => {
@@ -514,7 +524,11 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 								return (
 									<CNavItem key={k} className="nav-steps-special">
 										<CNavLink data-tab={`step:${k}`} className={linkClassname}>
-											{i === 0 ? (keys.length > 1 ? 'Step ' + (i + 1) : 'Actions') : i + 1}
+											<input
+												type="text"
+												value={stepNames[String(k)] || ''}
+												onChange={(e) => handleStepNameChange(String(k), e)}
+											/>
 										</CNavLink>
 									</CNavItem>
 								)
