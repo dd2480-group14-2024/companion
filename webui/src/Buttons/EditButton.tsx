@@ -407,6 +407,7 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 	const keys = useMemo(() => GetStepIds(steps), [steps])
 	const [selectedStep, setSelectedStep] = useState(keys.length ? `step:${keys[0]}` : 'feedbacks')
 	const [stepNames, setStepNames] = useState<Record<string, string>>({});
+	const [isEditing, setIsEditing] = useState(false);
 
 	useEffect(() => {
 		// Initialize step names from the provided steps
@@ -473,6 +474,11 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 		[socket, controlId]
 	)
 
+	const handleDoubleClick = (newStep: string) => {
+		setSelectedStep(newStep);
+		setIsEditing(!isEditing);
+	  };
+
 	const appendSet = useCallback(
 		(stepId: string) => {
 			socketEmitPromise(socket, 'controls:action-set:add', [controlId, stepId]).catch((e) => {
@@ -523,12 +529,16 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 
 								return (
 									<CNavItem key={k} className="nav-steps-special">
-										<CNavLink data-tab={`step:${k}`} className={linkClassname}>
-											<input
-												type="text"
-												value={stepNames[String(k)] || ''}
-												onChange={(e) => handleStepNameChange(String(k), e)}
-											/>
+										<CNavLink data-tab={`step:${k}`} className={linkClassname}  onDoubleClick={() => handleDoubleClick(`step:${k}`)}>
+											{isEditing ? (
+												<input
+													type="text"
+													value={stepNames[String(k)] || ''}
+													onChange={(e) => handleStepNameChange(String(k), e)}
+												/>
+											) : (
+												<span>{stepNames[String(k)] || ''}</span>
+											)}
 										</CNavLink>
 									</CNavItem>
 								)
