@@ -909,6 +909,19 @@ class ControlsController extends CoreBase {
 		client.onPromise('controls:unsubscribe:learn', async () => {
 			client.leave(ActiveLearnRoom)
 		})
+
+		client.onPromise('controls:step:rename', (controlId, stepId, rename) => {
+			const id = this.getControl(controlId)
+			if (!id) {
+				return false
+			}
+
+			if (id.supportsSteps) {
+				return id.stepName(stepId, rename)
+			} else {
+				throw new Error(`Control "${controlId}" does not support steps`)
+			}
+		})
 	}
 
 	/**

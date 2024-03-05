@@ -418,13 +418,24 @@ function TabsSection({ style, controlId, location, steps, runtimeProps, rotaryAc
 		  setStepNames(initialStepNames);
 		}, [steps]);
 	
-		const handleStepNameChange = (stepId: string, e: React.ChangeEvent<HTMLInputElement>) => {
-			// Update the step name for the specified stepId
+		const handleStepNameChange = useCallback((stepId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+			const name = e.target.value;
+
 			setStepNames((prevStepNames) => ({
-			  ...prevStepNames,
-			  [stepId]: e.target.value,
+				...prevStepNames,
+				[stepId]: name,
 			}));
-		  };
+
+			socketEmitPromise(socket, 'controls:step:rename', [controlId, stepId, name]).catch((e) => {
+				console.error('Failed to rename step:', e);
+
+				setStepNames((prevStepNames) => ({
+					...prevStepNames,
+					[stepId]: prevStepNames[stepId],
+				}));
+			});
+		}, [socket, controlId]);
+		
 
 	const appendStep = useCallback(
 		(e: FormEvent) => {

@@ -552,4 +552,14 @@ export default class FragmentActions extends CoreBase {
 
 		return changed
 	}
+
+	/**
+	 * Rename the control
+	 * @param {string} rename the new name it is being renamed to
+	 * @returns {void}
+	 * @access public
+	 */
+	rename(rename) {
+		this.name = rename
+	}
 }
